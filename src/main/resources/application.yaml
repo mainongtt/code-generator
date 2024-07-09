@@ -36,11 +36,29 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
     banner: false # 关闭控制台的 Banner 打印
 spring:
+  druid: # Druid 【监控】相关的全局配置
+    web-stat-filter:
+      enabled: true
+    stat-view-servlet:
+      enabled: true
+      allow: # 设置白名单，不填则允许所有访问
+      url-pattern: /druid/*
+      login-username: # 控制台管理用户名和密码
+      login-password:
+    filter:
+      stat:
+        enabled: true
+        log-slow-sql: true # 慢 SQL 记录
+        slow-sql-millis: 100
+        merge-sql: true
+      wall:
+        config:
+          multi-statement-allow: true
   datasource:
-    url: jdbc.:mysql://localhost:3306/generator
+    url: jdbc:mysql://localhost:3306/generator
+    driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis-plus-join:
   banner: false # 关闭控制台的 Banner 打印
 debug: false
