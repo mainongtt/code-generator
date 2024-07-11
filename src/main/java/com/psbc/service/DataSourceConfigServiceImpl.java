@@ -5,26 +5,33 @@ import com.psbc.entity.Vo.DataSourceConfigSaveReqVO;
 import com.psbc.mapper.DataSourceConfigMapper;
 import com.psbc.util.BeanUtils;
 import com.psbc.util.JdbcUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
 @Validated
+@Slf4j
 public class DataSourceConfigServiceImpl implements DataSourceConfigService {
     @Resource
     private DataSourceConfigMapper dataSourceConfigMapper;
 
     @Override
-    public Long createDataSourceConfig(DataSourceConfigSaveReqVO createReqVO) {
+    public Long createDataSourceConfig(DataSourceConfigSaveReqVO createReqVO) throws Exception {
         DataSourceConfigDO config = BeanUtils.toBean(createReqVO, DataSourceConfigDO.class);
         validateConnectionOK(config);
-
-        // 插入
-        dataSourceConfigMapper.insert(config);
+        try {
+            // 插入
+            dataSourceConfigMapper.insert(config);
+        }catch (Exception e){
+            log.error("错误信息", e.toString());
+            throw new Exception(e.getMessage());
+        }
         // 返回
         return config.getId();
     }
@@ -37,21 +44,36 @@ public class DataSourceConfigServiceImpl implements DataSourceConfigService {
     }
     @Override
     public void updateDataSourceConfig(DataSourceConfigSaveReqVO updateReqVO) {
+        // 校验存在
+        validateDataSourceConfigExists(updateReqVO.getId());
+        DataSourceConfigDO updateObj = BeanUtils.toBean(updateReqVO, DataSourceConfigDO.class);
+        validateConnectionOK(updateObj);
 
+        // 更新
+        dataSourceConfigMapper.updateById(updateObj);
     }
-
+    private void validateDataSourceConfigExists(Long id) {
+        if (dataSourceConfigMapper.selectById(id) == null) {
+            throw new RuntimeException("数据库配置不存在");
+        }
+    }
     @Override
     public void deleteDataSourceConfig(Long id) {
-
+        // 校验存在
+        validateDataSourceConfigExists(id);
+        // 删除
+        dataSourceConfigMapper.deleteById(id);
     }
 
     @Override
     public DataSourceConfigDO getDataSourceConfig(Long id) {
-        return null;
+        // 从 DB 中读取
+        return dataSourceConfigMapper.selectById(id);
     }
 
     @Override
     public List<DataSourceConfigDO> getDataSourceConfigList() {
-        return null;
+        List<DataSourceConfigDO> result = dataSourceConfigMapper.selectList();
+        return result;
     }
 }

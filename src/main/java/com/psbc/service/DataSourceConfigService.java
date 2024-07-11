@@ -13,7 +13,7 @@ public interface DataSourceConfigService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createDataSourceConfig(@Valid DataSourceConfigSaveReqVO createReqVO);
+    Long createDataSourceConfig(@Valid DataSourceConfigSaveReqVO createReqVO) throws Exception;
 
     /**
      * 更新数据源配置
