@@ -1,8 +1,9 @@
-package com.psbc.service;
+package com.psbc.service.impl;
 
 import com.psbc.entity.Do.DataSourceConfigDO;
 import com.psbc.entity.Vo.DataSourceConfigSaveReqVO;
 import com.psbc.mapper.DataSourceConfigMapper;
+import com.psbc.service.DataSourceConfigService;
 import com.psbc.util.BeanUtils;
 import com.psbc.util.JdbcUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 
 @Service
@@ -28,7 +28,7 @@ public class DataSourceConfigServiceImpl implements DataSourceConfigService {
         try {
             // 插入
             dataSourceConfigMapper.insert(config);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("错误信息", e.toString());
             throw new Exception(e.getMessage());
         }
@@ -42,6 +42,7 @@ public class DataSourceConfigServiceImpl implements DataSourceConfigService {
             throw new RuntimeException("数据库配置错");
         }
     }
+
     @Override
     public void updateDataSourceConfig(DataSourceConfigSaveReqVO updateReqVO) {
         // 校验存在
@@ -52,11 +53,13 @@ public class DataSourceConfigServiceImpl implements DataSourceConfigService {
         // 更新
         dataSourceConfigMapper.updateById(updateObj);
     }
+
     private void validateDataSourceConfigExists(Long id) {
         if (dataSourceConfigMapper.selectById(id) == null) {
             throw new RuntimeException("数据库配置不存在");
         }
     }
+
     @Override
     public void deleteDataSourceConfig(Long id) {
         // 校验存在
