@@ -57,7 +57,7 @@ public class CodegenController {
     }
 //
 //    @GetMapping("/table/page")
-//    @Operation(summary = "获得表定义分页")
+//    @Operation( = "获得表定义分页")
 //    public CommonResult<PageResult<CodegenTableRespVO>> getCodegenTablePage(@Valid CodegenTablePageReqVO pageReqVO) {
 //        PageResult<CodegenTableDO> pageResult = codegenService.getCodegenTablePage(pageReqVO);
 //        return success(BeanUtils.toBean(pageResult, CodegenTableRespVO.class));
